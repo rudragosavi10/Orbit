@@ -1,46 +1,47 @@
 "use client";
 
-import { Menu } from "lucide-react";
-
+import Image from "next/image";
+import { Menu, CircleUserRound } from "lucide-react";
 interface NavbarProps {
   onMenuClick: () => void;
 }
 
 export function Navbar({ onMenuClick }: NavbarProps) {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 h-12 border-b border-border bg-background/95 backdrop-blur">
-      <div className="flex h-full items-center">
-        <div className="flex h-full w-52 items-center gap-2 px-3 md:px-4">
+    <header className="fixed inset-x-0 top-0 z-40 h-12 bg-background/95 backdrop-blur">
+      <div className="relative z-10 flex h-full items-center justify-between">
+        <div className="flex h-full w-52 items-center px-3 md:px-4">
           <button
             type="button"
             onClick={onMenuClick}
             aria-label="Open sidebar"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
+            className="mr-2 inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:hidden"
           >
             <Menu className="h-4 w-4" />
           </button>
 
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-[10px] font-bold text-primary-foreground">
-              O
-            </div>
-
-            <span className="text-sm font-semibold tracking-tight text-foreground">
-              Orbit
-            </span>
-          </div>
+          <Image
+            src="/orbit-logo.png.jpeg"
+            alt="Orbit logo"
+            width={230}
+            height={60}
+            priority
+            className="h-13 w-auto object-contain"
+          />
         </div>
 
-        <div className="flex flex-1 items-center justify-end px-3 md:px-4">
+        <div className="flex items-center px-3 md:px-4">
           <button
-            type="button"
-            aria-label="User profile"
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted text-[10px] font-semibold text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          >
-            U
-          </button>
+  type="button"
+  aria-label="User profile"
+  className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+>
+  <CircleUserRound className="h-6 w-6" />
+</button>
         </div>
       </div>
+
+      <div className="absolute inset-x-0 bottom-0 z-20 h-px bg-border" />
     </header>
   );
 }
