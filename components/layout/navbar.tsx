@@ -34,7 +34,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           <button
   type="button"
   aria-label="User profile"
-  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-colors hover:opacity-90"
+  className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-colors hover:opacity-90"
 >
   <UserRound className="h-5 w-5 fill-current" />
 </button>
