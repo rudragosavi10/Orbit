@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Menu, CircleUserRound } from "lucide-react";
+import { Menu, UserRound } from "lucide-react";
 interface NavbarProps {
   onMenuClick: () => void;
 }
@@ -34,9 +34,9 @@ export function Navbar({ onMenuClick }: NavbarProps) {
           <button
   type="button"
   aria-label="User profile"
-  className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+  className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm transition-colors hover:opacity-90"
 >
-  <CircleUserRound className="h-6 w-6" />
+  <UserRound className="h-5 w-5 fill-current" />
 </button>
         </div>
       </div>
