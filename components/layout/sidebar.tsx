@@ -64,7 +64,7 @@ export function Sidebar({
         type="button"
         aria-label="Close sidebar overlay"
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -72,32 +72,29 @@ export function Sidebar({
       />
 
       <aside
-        className={`fixed left-0 bottom-0 top-12 z-50 w-52 border-r border-border bg-background transition-transform duration-300 ease-in-out md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-20 z-50 w-80 bg-white/70 backdrop-blur-xl transition-transform duration-300 ease-in-out md:z-30 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex h-12 items-center justify-between border-b border-border px-3 md:hidden">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-[10px] font-bold text-primary-foreground">
-              O
-            </div>
-
-            <span className="text-sm font-semibold tracking-tight text-foreground">
-              Orbit
-            </span>
-          </div>
+        <div className="flex h-16 items-center justify-between px-5 md:hidden">
+          <span className="text-lg font-semibold text-slate-950">
+            Menu
+          </span>
 
           <button
             type="button"
             onClick={onClose}
             aria-label="Close sidebar"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950"
           >
-            <X className="h-4 w-4" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
-        <nav className="space-y-1 p-3">
+        <nav
+          aria-label="Main navigation"
+          className="space-y-3 p-5"
+        >
           {navigationItems.map(({ label, section, icon: Icon }) => {
             const isActive = activeSection === section;
 
@@ -105,14 +102,15 @@ export function Sidebar({
               <button
                 key={section}
                 type="button"
+                aria-current={isActive ? "page" : undefined}
                 onClick={() => handleNavigation(section)}
-                className={`flex h-9 w-full items-center gap-3 rounded-md px-3 text-left text-sm font-medium transition-colors ${
+                className={`flex h-14 w-full items-center gap-4 rounded-2xl px-5 text-left text-base font-semibold transition-all ${
                   isActive
-                    ? "bg-primary text-primary-foreground"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "bg-slate-200 text-slate-950 shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                 }`}
               >
-                <Icon className="h-4 w-4 shrink-0" />
+                <Icon className="h-6 w-6 shrink-0" />
                 <span>{label}</span>
               </button>
             );
