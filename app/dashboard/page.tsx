@@ -19,12 +19,21 @@ export default function DashboardPage() {
   useEffect(() => {
     if (loading) return;
 
-    if (profile?.onboardingCompleted) {
-      setShowOverlay(false);
+    // New user or no profile -> show onboarding
+    if (!profile || !profile.onboardingCompleted) {
+      setShowOverlay(true);
+      setIsClosing(false);
       return;
     }
 
-    setShowOverlay(true);
+    // Existing onboarded user
+    setIsClosing(true);
+
+    const timer = setTimeout(() => {
+      setShowOverlay(false);
+    }, 700);
+
+    return () => clearTimeout(timer);
   }, [loading, profile]);
 
   if (loading || showOverlay === null) {
@@ -32,16 +41,8 @@ export default function DashboardPage() {
   }
 
   return (
-    <AppShell>
-      <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Welcome to Orbit
-        </h1>
-
-        <p className="mt-2 text-sm text-muted-foreground">
-          Your dashboard content will appear here.
-        </p>
-      </section>
+    <>
+      <AppShell />
 
       {showOverlay && (
         <OnboardingOverlay closing={isClosing}>
@@ -50,6 +51,6 @@ export default function DashboardPage() {
           </OnboardingCard>
         </OnboardingOverlay>
       )}
-    </AppShell>
+    </>
   );
 }
