@@ -97,7 +97,6 @@ export default function OnboardingForm() {
       await user.reload();
       await refreshProfile();
 
-      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Unable to complete onboarding:", error);
     } finally {
