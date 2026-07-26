@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { updateProfile } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
@@ -50,18 +50,14 @@ export default function OnboardingForm() {
   const { refreshProfile } = useUserProfile();
 
   const [selectedAvatar, setSelectedAvatar] = useState(0);
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const [username, setUsername] = useState(() => {
     const displayName = auth.currentUser?.displayName;
 
-    if (!displayName) {
-      return;
-    }
+    return displayName ? generateUsername(displayName) : "";
+  });
 
-    setUsername(generateUsername(displayName));
-  }, []);
+  const [loading, setLoading] = useState(false);
 
   const canContinue = username.trim().length >= 3;
 

@@ -17,12 +17,9 @@ export function Navbar({ onMenuClick }: NavbarProps) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(
-      auth,
-      (currentUser) => {
-        setUser(currentUser);
-      },
-    );
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
 
     return unsubscribe;
   }, []);
@@ -63,19 +60,25 @@ export function Navbar({ onMenuClick }: NavbarProps) {
             }}
             aria-label="Open user profile"
             aria-expanded={isProfileOpen}
-            className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-950 text-white shadow-sm transition-transform hover:scale-105"
+            className={`relative flex h-12 w-12 shrink-0 items-center justify-center rounded-full p-1 transition-colors ${
+              isProfileOpen
+                ? "bg-slate-200 ring-4 ring-slate-300"
+                : "hover:bg-slate-200"
+            }`}
           >
-            {user?.photoURL ? (
-              <Image
-                src={user.photoURL}
-                alt={`${username} avatar`}
-                fill
-                sizes="48px"
-                className="object-cover"
-              />
-            ) : (
-              <UserRound className="h-7 w-7 fill-current" />
-            )}
+            <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-slate-950 text-white">
+              {user?.photoURL ? (
+                <Image
+                  src={user.photoURL}
+                  alt={`${username} avatar`}
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
+              ) : (
+                <UserRound className="h-6 w-6 fill-current" />
+              )}
+            </div>
           </button>
         </div>
       </header>
