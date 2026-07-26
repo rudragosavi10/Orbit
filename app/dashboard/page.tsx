@@ -13,27 +13,21 @@ import { useUserProfile } from "@/hooks/use-user-profile";
 export default function DashboardPage() {
   const { profile, loading } = useUserProfile();
 
-  const [showOverlay, setShowOverlay] = useState(true);
+  const [showOverlay, setShowOverlay] = useState<boolean | null>(null);
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
     if (loading) return;
 
     if (profile?.onboardingCompleted) {
-      setIsClosing(true);
-
-      const timer = setTimeout(() => {
-        setShowOverlay(false);
-      }, 800);
-
-      return () => clearTimeout(timer);
+      setShowOverlay(false);
+      return;
     }
 
     setShowOverlay(true);
-    setIsClosing(false);
   }, [loading, profile]);
 
-  if (loading) {
+  if (loading || showOverlay === null) {
     return null;
   }
 
