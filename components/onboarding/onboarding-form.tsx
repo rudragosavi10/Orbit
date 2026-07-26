@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { auth } from "@/firebase/config";
 
@@ -12,12 +12,28 @@ import AvatarCarousel from "./avatar-carousel";
 import UsernameInput from "./username-input";
 import ContinueButton from "./continue-button";
 
+function generateUsername(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/[^a-z0-9]/g, "");
+}
+
 export default function OnboardingForm() {
   const { refreshProfile } = useUserProfile();
 
   const [selectedAvatar, setSelectedAvatar] = useState(0);
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const displayName = auth.currentUser?.displayName;
+
+    if (!displayName) return;
+
+    setUsername(generateUsername(displayName));
+  }, []);
 
   const canContinue = username.trim().length >= 3;
 
@@ -86,6 +102,7 @@ export default function OnboardingForm() {
       <div className="mt-8 w-full max-w-md">
         <ContinueButton
           disabled={!canContinue || loading}
+          loading={loading}
           onClick={handleContinue}
         />
       </div>
