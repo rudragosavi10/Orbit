@@ -20,12 +20,11 @@ export function AppShell() {
     function handleResize() {
       if (window.innerWidth < 768) {
         setIsSidebarOpen(false);
-      } else {
-        setIsSidebarOpen(true);
       }
     }
 
     handleResize();
+
     window.addEventListener("resize", handleResize);
 
     return () => {
@@ -35,7 +34,7 @@ export function AppShell() {
 
   useEffect(() => {
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
+      if (event.key === "Escape" && window.innerWidth < 768) {
         setIsSidebarOpen(false);
       }
     }
@@ -89,7 +88,7 @@ export function AppShell() {
 
       <main
         className={`min-h-screen bg-white pt-20 transition-[padding] duration-300 ${
-          isSidebarOpen ? "md:pl-80" : "md:pl-0"
+          isSidebarOpen ? "md:pl-80" : "md:pl-20"
         }`}
       >
         <div className="mx-auto w-full max-w-7xl p-4 sm:p-6 md:p-10 lg:p-12">
