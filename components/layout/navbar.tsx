@@ -44,7 +44,7 @@ export function Navbar({ onMenuClick }: NavbarProps) {
             </button>
 
             <Image
-              src="/orbit-logo.png.jpeg"
+              src="/1.svg"
               alt="Orbit logo"
               width={320}
               height={90}
