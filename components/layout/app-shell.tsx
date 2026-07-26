@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 
 import { Navbar } from "@/components/layout/navbar";
 import {
@@ -11,7 +11,11 @@ import { AssignmentsContent } from "@/features/assignments/assignments-content";
 import { ClassroomsContent } from "@/features/classrooms/classrooms-content";
 import { DashboardContent } from "@/features/dashboard/dashboard-content";
 
-export function AppShell() {
+interface AppShellProps {
+  children?: ReactNode;
+}
+
+export function AppShell({ children }: AppShellProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeSection, setActiveSection] =
     useState<SidebarSection>("dashboard");
@@ -65,7 +69,7 @@ export function AppShell() {
 
       <main className="min-h-screen pt-12 md:pl-52">
         <div className="mx-auto w-full max-w-7xl p-4 md:p-6 lg:p-8">
-          {renderActiveContent()}
+          {children ?? renderActiveContent()}
         </div>
       </main>
     </div>

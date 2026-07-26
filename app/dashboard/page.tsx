@@ -1,11 +1,41 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { AppShell } from "@/components/layout/app-shell";
 
 import OnboardingOverlay from "@/components/onboarding/onboarding-overlay";
 import OnboardingCard from "@/components/onboarding/onboarding-card";
 import OnboardingForm from "@/components/onboarding/onboarding-form";
 
+import { useUserProfile } from "@/hooks/use-user-profile";
+
 export default function DashboardPage() {
-  const firstLogin = true;
+  const { profile, loading } = useUserProfile();
+
+  const [showOverlay, setShowOverlay] = useState(true);
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (profile?.onboardingCompleted) {
+      setIsClosing(true);
+
+      const timer = setTimeout(() => {
+        setShowOverlay(false);
+      }, 800);
+
+      return () => clearTimeout(timer);
+    }
+
+    setShowOverlay(true);
+    setIsClosing(false);
+  }, [loading, profile]);
+
+  if (loading) {
+    return null;
+  }
 
   return (
     <AppShell>
@@ -19,9 +49,9 @@ export default function DashboardPage() {
         </p>
       </section>
 
-      {firstLogin && (
-        <OnboardingOverlay>
-          <OnboardingCard>
+      {showOverlay && (
+        <OnboardingOverlay closing={isClosing}>
+          <OnboardingCard closing={isClosing}>
             <OnboardingForm />
           </OnboardingCard>
         </OnboardingOverlay>
