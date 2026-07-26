@@ -53,7 +53,7 @@ export function AppShell() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
+    <div className="min-h-screen bg-white text-slate-950">
       <Navbar onMenuClick={() => setIsSidebarOpen(true)} />
 
       <Sidebar
@@ -63,7 +63,7 @@ export function AppShell() {
         onSectionChange={setActiveSection}
       />
 
-      <main className="min-h-screen bg-slate-50 pt-20 md:pl-80">
+      <main className="min-h-screen bg-white pt-20 md:pl-80">
         <div className="mx-auto w-full max-w-7xl p-6 md:p-10 lg:p-12">
           {renderActiveContent()}
         </div>

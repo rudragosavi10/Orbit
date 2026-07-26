@@ -72,7 +72,7 @@ export function Sidebar({
       />
 
       <aside
-        className={`fixed bottom-0 left-0 top-20 z-50 w-80 bg-white/70 backdrop-blur-xl transition-transform duration-300 ease-in-out md:z-30 md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-20 z-50 w-80 bg-slate-50 transition-transform duration-300 ease-in-out md:z-30 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -85,16 +85,13 @@ export function Sidebar({
             type="button"
             onClick={onClose}
             aria-label="Close sidebar"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-100 hover:text-slate-950"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-200 hover:text-slate-950"
           >
             <X className="h-6 w-6" />
           </button>
         </div>
 
-        <nav
-          aria-label="Main navigation"
-          className="space-y-3 p-5"
-        >
+        <nav aria-label="Main navigation" className="space-y-3 p-5">
           {navigationItems.map(({ label, section, icon: Icon }) => {
             const isActive = activeSection === section;
 
@@ -104,9 +101,9 @@ export function Sidebar({
                 type="button"
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => handleNavigation(section)}
-                className={`flex h-14 w-full items-center gap-4 rounded-2xl px-5 text-left text-base font-semibold transition-all ${
+                className={`flex h-14 w-full items-center gap-4 rounded-2xl px-5 text-left text-base font-semibold transition-all duration-200 ${
                   isActive
-                    ? "bg-slate-200 text-slate-950 shadow-sm"
+                    ? "bg-white text-slate-950 shadow-sm"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-950"
                 }`}
               >
