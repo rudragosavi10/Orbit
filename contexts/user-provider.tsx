@@ -9,13 +9,14 @@ import {
   ReactNode,
 } from "react";
 
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, type User } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
 import { getUserProfile } from "@/lib/services/user.service";
 import type { UserProfile } from "@/lib/types/user";
 
 interface UserContextType {
+  user: User | null;
   profile: UserProfile | null;
   loading: boolean;
   refreshProfile: () => Promise<void>;
@@ -28,20 +29,23 @@ export function UserProvider({
 }: {
   children: ReactNode;
 }) {
+  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   const refreshProfile = useCallback(async () => {
-    const user = auth.currentUser;
+    const currentUser = auth.currentUser;
 
-    if (!user) {
+    setUser(currentUser);
+
+    if (!currentUser) {
       setProfile(null);
       setLoading(false);
       return;
     }
 
     try {
-      const data = await getUserProfile(user.uid);
+      const data = await getUserProfile(currentUser.uid);
       setProfile(data);
     } catch (error) {
       console.error("Failed to fetch user profile:", error);
@@ -52,7 +56,9 @@ export function UserProvider({
   }, []);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async () => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setLoading(true);
+      setUser(currentUser);
       await refreshProfile();
     });
 
@@ -62,6 +68,7 @@ export function UserProvider({
   return (
     <UserContext.Provider
       value={{
+        user,
         profile,
         loading,
         refreshProfile,

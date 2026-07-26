@@ -11,7 +11,7 @@ import OnboardingForm from "@/components/onboarding/onboarding-form";
 import { useUserProfile } from "@/hooks/use-user-profile";
 
 export default function DashboardPage() {
-  const { profile, loading } = useUserProfile();
+  const { user, profile, loading } = useUserProfile();
 
   const [showOverlay, setShowOverlay] = useState<boolean | null>(null);
   const [isClosing, setIsClosing] = useState(false);
@@ -19,7 +19,14 @@ export default function DashboardPage() {
   useEffect(() => {
     if (loading) return;
 
-    // New user or no profile -> show onboarding
+    // User is logged out -> never show onboarding
+    if (!user) {
+      setShowOverlay(false);
+      setIsClosing(false);
+      return;
+    }
+
+    // Logged in but profile not completed
     if (!profile || !profile.onboardingCompleted) {
       setShowOverlay(true);
       setIsClosing(false);
@@ -34,7 +41,7 @@ export default function DashboardPage() {
     }, 700);
 
     return () => clearTimeout(timer);
-  }, [loading, profile]);
+  }, [user, profile, loading]);
 
   if (loading || showOverlay === null) {
     return null;
