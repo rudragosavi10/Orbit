@@ -72,7 +72,7 @@ export function Sidebar({
       />
 
       <aside
-        className={`fixed bottom-0 left-0 top-20 z-50 bg-slate-50 transition-all duration-300 ease-in-out md:z-30 md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-20 z-50 bg-slate-50 transition-[width,transform] duration-300 ease-in-out md:z-30 md:translate-x-0 ${
           isOpen
             ? "w-80 translate-x-0"
             : "-translate-x-full w-80 md:w-20"
@@ -95,9 +95,7 @@ export function Sidebar({
 
         <nav
           aria-label="Main navigation"
-          className={`space-y-3 transition-all duration-300 ${
-            isOpen ? "p-5" : "p-3 md:pt-5"
-          }`}
+          className="mt-5 flex flex-col gap-3"
         >
           {navigationItems.map(({ label, section, icon: Icon }) => {
             const isActive = activeSection === section;
@@ -110,10 +108,10 @@ export function Sidebar({
                 aria-label={label}
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => handleNavigation(section)}
-                className={`flex h-14 w-full items-center rounded-2xl text-base font-semibold transition-all duration-200 ${
+                className={`flex h-14 items-center overflow-hidden rounded-2xl text-base font-semibold transition-all duration-300 ${
                   isOpen
-                    ? "gap-4 px-5 text-left"
-                    : "justify-center px-0"
+                    ? "mx-3 w-[calc(100%-1.5rem)] gap-4 pl-4 pr-5 text-left"
+                    : "ml-3 w-14 justify-center"
                 } ${
                   isActive
                     ? "bg-white text-slate-950 shadow-sm"
@@ -123,10 +121,10 @@ export function Sidebar({
                 <Icon className="h-6 w-6 shrink-0" />
 
                 <span
-                  className={`whitespace-nowrap transition-all duration-200 ${
+                  className={`whitespace-nowrap transition-opacity duration-200 ${
                     isOpen
-                      ? "visible w-auto opacity-100"
-                      : "invisible w-0 overflow-hidden opacity-0"
+                      ? "visible opacity-100"
+                      : "invisible w-0 opacity-0"
                   }`}
                 >
                   {label}
