@@ -1,44 +1,90 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Menu, UserRound } from "lucide-react";
+import { onAuthStateChanged, type User } from "firebase/auth";
+
+import { auth } from "@/firebase/config";
+import { ProfileMenu } from "@/features/profile";
 
 interface NavbarProps {
   onMenuClick: () => void;
 }
 
 export function Navbar({ onMenuClick }: NavbarProps) {
+  const [user, setUser] = useState<User | null>(null);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (currentUser) => {
+        setUser(currentUser);
+      },
+    );
+
+    return unsubscribe;
+  }, []);
+
+  const username =
+    user?.displayName?.trim() ||
+    user?.email?.split("@")[0] ||
+    "Orbit User";
+
   return (
-    <header className="fixed inset-x-0 top-0 z-40 h-20 bg-slate-50">
-      <div className="flex h-full items-center justify-between px-4 md:px-8">
-        <div className="flex h-full items-center">
+    <>
+      <header className="fixed inset-x-0 top-0 z-40 h-20 bg-slate-50">
+        <div className="flex h-full items-center justify-between px-4 md:px-8">
+          <div className="flex h-full items-center">
+            <button
+              type="button"
+              onClick={onMenuClick}
+              aria-label="Toggle sidebar"
+              className="mr-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-200 hover:text-slate-950"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+
+            <Image
+              src="/orbit-logo.png.jpeg"
+              alt="Orbit logo"
+              width={320}
+              height={90}
+              priority
+              className="h-16 w-auto object-contain"
+            />
+          </div>
+
           <button
             type="button"
-            onClick={onMenuClick}
-            aria-label="Toggle sidebar"
-            className="mr-3 inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-200 hover:text-slate-950"
+            onClick={() => {
+              setIsProfileOpen((currentState) => !currentState);
+            }}
+            aria-label="Open user profile"
+            aria-expanded={isProfileOpen}
+            className="relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-slate-950 text-white shadow-sm transition-transform hover:scale-105"
           >
-            <Menu className="h-6 w-6" />
+            {user?.photoURL ? (
+              <Image
+                src={user.photoURL}
+                alt={`${username} avatar`}
+                fill
+                sizes="48px"
+                className="object-cover"
+              />
+            ) : (
+              <UserRound className="h-7 w-7 fill-current" />
+            )}
           </button>
-
-          <Image
-            src="/orbit-logo.png.jpeg"
-            alt="Orbit logo"
-            width={320}
-            height={90}
-            priority
-            className="h-16 w-auto object-contain"
-          />
         </div>
+      </header>
 
-        <button
-          type="button"
-          aria-label="User profile"
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-950 text-white shadow-sm transition-all duration-200 hover:scale-105 hover:bg-black"
-        >
-          <UserRound className="h-7 w-7 fill-current" />
-        </button>
-      </div>
-    </header>
+      <ProfileMenu
+        user={user}
+        isOpen={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
+    </>
   );
 }

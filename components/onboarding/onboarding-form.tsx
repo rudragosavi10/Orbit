@@ -1,16 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { updateProfile } from "firebase/auth";
 
 import { auth } from "@/firebase/config";
-
+import { useUserProfile } from "@/hooks/use-user-profile";
 import { avatars } from "@/lib/avatars";
 import { createUserProfile } from "@/lib/services/user.service";
-import { useUserProfile } from "@/hooks/use-user-profile";
 
 import AvatarCarousel from "./avatar-carousel";
-import UsernameInput from "./username-input";
 import ContinueButton from "./continue-button";
+import UsernameInput from "./username-input";
 
 function generateUsername(name: string): string {
   return name
@@ -18,6 +18,32 @@ function generateUsername(name: string): string {
     .toLowerCase()
     .replace(/\s+/g, "")
     .replace(/[^a-z0-9]/g, "");
+}
+
+function getAvatarUrl(avatar: unknown): string {
+  if (typeof avatar === "string") {
+    return avatar;
+  }
+
+  if (typeof avatar !== "object" || avatar === null) {
+    throw new Error("The selected avatar is invalid.");
+  }
+
+  const avatarRecord = avatar as Record<string, unknown>;
+
+  const possibleUrl =
+    avatarRecord.src ??
+    avatarRecord.url ??
+    avatarRecord.path ??
+    avatarRecord.image;
+
+  if (typeof possibleUrl !== "string" || !possibleUrl.trim()) {
+    throw new Error(
+      "The selected avatar does not contain a valid image path.",
+    );
+  }
+
+  return possibleUrl;
 }
 
 export default function OnboardingForm() {
@@ -30,7 +56,9 @@ export default function OnboardingForm() {
   useEffect(() => {
     const displayName = auth.currentUser?.displayName;
 
-    if (!displayName) return;
+    if (!displayName) {
+      return;
+    }
 
     setUsername(generateUsername(displayName));
   }, []);
@@ -40,25 +68,42 @@ export default function OnboardingForm() {
   async function handleContinue() {
     const user = auth.currentUser;
 
-    if (!user || loading) return;
+    if (!user || loading || !canContinue) {
+      return;
+    }
 
     try {
       setLoading(true);
 
       const avatar = avatars[selectedAvatar];
 
+      if (!avatar) {
+        throw new Error("Please select a valid avatar.");
+      }
+
+      const avatarUrl = getAvatarUrl(avatar);
+      const trimmedUsername = username.trim();
+
       await createUserProfile({
         uid: user.uid,
         email: user.email ?? "",
         fullName: user.displayName ?? "",
-        username: username.trim(),
+        username: trimmedUsername,
         avatar,
         onboardingCompleted: true,
       });
 
+      await updateProfile(user, {
+        displayName: trimmedUsername,
+        photoURL: avatarUrl,
+      });
+
+      await user.reload();
       await refreshProfile();
+
+      window.location.href = "/dashboard";
     } catch (error) {
-      console.error(error);
+      console.error("Unable to complete onboarding:", error);
     } finally {
       setLoading(false);
     }
@@ -66,9 +111,6 @@ export default function OnboardingForm() {
 
   return (
     <div className="flex flex-col items-center text-center">
-
-      {/* Heading */}
-
       <div className="space-y-2">
         <h1 className="text-4xl font-bold tracking-tight text-slate-900">
           Welcome to Orbit 👋
@@ -79,16 +121,12 @@ export default function OnboardingForm() {
         </p>
       </div>
 
-      {/* Avatar */}
-
       <div className="mt-10">
         <AvatarCarousel
           value={selectedAvatar}
           onChange={setSelectedAvatar}
         />
       </div>
-
-      {/* Username */}
 
       <div className="mt-10 w-full max-w-md">
         <UsernameInput
@@ -97,8 +135,6 @@ export default function OnboardingForm() {
         />
       </div>
 
-      {/* Button */}
-
       <div className="mt-8 w-full max-w-md">
         <ContinueButton
           disabled={!canContinue || loading}
@@ -106,7 +142,6 @@ export default function OnboardingForm() {
           onClick={handleContinue}
         />
       </div>
-
     </div>
   );
 }
