@@ -4,7 +4,6 @@ import {
   BookOpen,
   ClipboardList,
   LayoutDashboard,
-  X,
   type LucideIcon,
 } from "lucide-react";
 
@@ -51,21 +50,28 @@ export function Sidebar({
   onSectionChange,
 }: SidebarProps) {
   function handleNavigation(section: SidebarSection) {
-    onSectionChange(section);
+    const isMobile = window.innerWidth < 768;
 
-    if (window.innerWidth < 768) {
+    if (isMobile) {
       onClose();
+
+      window.setTimeout(() => {
+        onSectionChange(section);
+      }, 250);
+
+      return;
     }
+
+    onSectionChange(section);
   }
 
   return (
     <>
-      {/* Mobile overlay (starts below navbar) */}
       <button
         type="button"
         aria-label="Close sidebar overlay"
         onClick={onClose}
-        className={`fixed left-0 right-0 bottom-0 top-20 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
+        className={`fixed bottom-0 left-0 right-0 top-20 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -73,21 +79,15 @@ export function Sidebar({
       />
 
       <aside
-        className={`fixed left-0 top-20 bottom-0 z-50 bg-slate-50 transition-[width,transform] duration-300 ease-in-out md:z-30 md:translate-x-0 ${
+        className={`fixed bottom-0 left-0 top-20 z-50 bg-slate-50 transition-transform duration-300 ease-in-out md:z-30 md:translate-x-0 md:transition-[width] ${
           isOpen
             ? "w-80 translate-x-0"
             : "-translate-x-full w-80 md:w-20"
         }`}
       >
-        <div className="flex h-16 items-center px-8 md:hidden">
-  <span className="text-lg font-semibold text-slate-950">
-    Menu
-  </span>
-</div>
-
         <nav
           aria-label="Main navigation"
-          className="mt-5 flex flex-col gap-3"
+          className="flex flex-col gap-3 pt-3"
         >
           {navigationItems.map(({ label, section, icon: Icon }) => {
             const isActive = activeSection === section;
