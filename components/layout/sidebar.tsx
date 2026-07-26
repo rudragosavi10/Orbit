@@ -60,11 +60,12 @@ export function Sidebar({
 
   return (
     <>
+      {/* Mobile overlay (starts below navbar) */}
       <button
         type="button"
         aria-label="Close sidebar overlay"
         onClick={onClose}
-        className={`fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
+        className={`fixed left-0 right-0 bottom-0 top-20 z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
           isOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -72,7 +73,7 @@ export function Sidebar({
       />
 
       <aside
-        className={`fixed bottom-0 left-0 top-20 z-50 bg-slate-50 transition-[width,transform] duration-300 ease-in-out md:z-30 md:translate-x-0 ${
+        className={`fixed left-0 top-20 bottom-0 z-50 bg-slate-50 transition-[width,transform] duration-300 ease-in-out md:z-30 md:translate-x-0 ${
           isOpen
             ? "w-80 translate-x-0"
             : "-translate-x-full w-80 md:w-20"
