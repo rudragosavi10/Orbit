@@ -108,10 +108,10 @@ export function Sidebar({
                 aria-label={label}
                 aria-current={isActive ? "page" : undefined}
                 onClick={() => handleNavigation(section)}
-                className={`flex h-14 items-center overflow-hidden rounded-2xl text-base font-semibold transition-all duration-300 ${
+                className={`ml-3 flex h-14 items-center overflow-hidden rounded-2xl text-base font-semibold transition-[width,background-color,color,box-shadow] duration-300 ${
                   isOpen
-                    ? "mx-3 w-[calc(100%-1.5rem)] gap-4 pl-4 pr-5 text-left"
-                    : "ml-3 w-14 justify-center"
+                    ? "w-[calc(100%-1.5rem)] gap-4 px-4 text-left"
+                    : "w-14 gap-4 px-4 text-left"
                 } ${
                   isActive
                     ? "bg-white text-slate-950 shadow-sm"
