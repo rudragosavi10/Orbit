@@ -79,20 +79,11 @@ export function Sidebar({
             : "-translate-x-full w-80 md:w-20"
         }`}
       >
-        <div className="flex h-16 items-center justify-between px-5 md:hidden">
-          <span className="text-lg font-semibold text-slate-950">
-            Menu
-          </span>
-
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close sidebar"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-slate-700 transition-colors hover:bg-slate-200 hover:text-slate-950"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
+        <div className="flex h-16 items-center px-8 md:hidden">
+  <span className="text-lg font-semibold text-slate-950">
+    Menu
+  </span>
+</div>
 
         <nav
           aria-label="Main navigation"
